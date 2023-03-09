@@ -58,10 +58,10 @@ function plentygram_auto_image_settings_page_callback() {
                 $plentygram_name = esc_attr('plentygram_auto_image_categories[]');
                 $plentygram_value = esc_attr($category->term_id);
                 $plentygram_id = esc_attr('auto_image_category_' . $category->term_id);
-                echo '<input type="checkbox" name="'. $plentygram_name .'" value="'. $plentygram_value .'" id="'. $plentygram_id .'" '. $plentygram_checked .'> '. esc_html($category->name) .'<br>';
+                echo '<input type="checkbox" name="'. esc_attr($plentygram_name) .'" value="'. esc_attr($plentygram_value) .'" id="'. esc_attr($plentygram_id) .'" '. esc_attr($plentygram_checked) .'> '. esc_html($category->name) .'<br>';
             }
             ?>
-            <input type="checkbox" name="plentygram_auto_image_categories[]" value="all" <?php echo (in_array('all', $plentygram_categories)) ? 'checked' : ''; ?>> <?php esc_html_e('All Categories', 'auto-image-settings');?><br>
+            <input type="checkbox" name="<?php echo esc_attr( 'plentygram_auto_image_categories[]' ); ?>" value="<?php echo esc_attr( 'all' ); ?>" <?php echo ( in_array( 'all', array_map( 'esc_attr', $plentygram_categories ) ) ) ? 'checked' : ''; ?>> <?php esc_html_e( 'All Categories', 'auto-image-settings' ); ?><br>
             <small><?php esc_html_e('Select the categories to apply the plugin to or select "All Categories" to apply it to all categories.', 'auto-image-settings');?></small>
         </p>
         <?php submit_button(); ?>
@@ -111,7 +111,8 @@ function plentygram_insert_img_before_content( $content ) {
                 $plentygram_img_data = json_decode( wp_remote_retrieve_body( $plentygram_img_response ), true );
                 $plentygram_img_url = $plentygram_img_data['results'][0]['image'];
                 $plentygram_img_tag = '<center><img width="90%" src="' . esc_url( $plentygram_modified_link . $plentygram_img_url ) . '" alt="' . esc_attr( $plentygram_title ) . '"></center>';
-                $content = $plentygram_img_tag . $content;
+                $allowed_tags = wp_kses_allowed_html( 'post' ); // allowed tags for post content
+                $content = wp_kses( $plentygram_img_tag . $content, $allowed_tags );
             }
         }
     }
