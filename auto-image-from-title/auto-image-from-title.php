@@ -3,7 +3,7 @@
  * Plugin Name: Auto Image From Title
  * Plugin URI: https://www.plentygram.com/blog/wordpress-auto-image-from-title/
  * Description: Automatically inserts an image from the post title using DuckDuckGo image search API.
- * Version: 1.0.0
+ * Version: 2.0.0
  * Author: PlentyGram
  * Author URI: https://www.plentygram.com/
  */
@@ -100,7 +100,7 @@ function plentygram_insert_img_before_content( $content ) {
 
         if ( ! is_wp_error( $plentygram_response ) ) {
             $plentygram_data = wp_remote_retrieve_body( $plentygram_response );
-            preg_match( "/vqd='(.*?)'/", $plentygram_data, $plentygram_matches );
+            preg_match( '/vqd="(.*?)"/', $plentygram_data, $plentygram_matches );
             $plentygram_vqd = $plentygram_matches[1];
 
             // Retrieve the image URL
